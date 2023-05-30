@@ -45,7 +45,7 @@ for msg in consumer:
 
     # Create dictionary and ingest data into MongoDB
     try:
-       reaction_rec = {
+       comment_rec = {
          'userId': userId,
          'objectId': objectId,
          'comment': comment
