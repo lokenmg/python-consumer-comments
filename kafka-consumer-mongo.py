@@ -34,44 +34,44 @@ try:
 except:
     print("Could not connect to MongoDB")
 
-consumer = KafkaConsumer('reactions',bootstrap_servers=['my-kafka-0.my-kafka-headless.mykafka-lokenmg.svc.cluster.local:9092'])
+consumer = KafkaConsumer('comments',bootstrap_servers=['my-kafka-0.my-kafka-headless.mykafka-lokenmg.svc.cluster.local:9092'])
 # Parse received data from Kafka
 for msg in consumer:
     record = json.loads(msg.value)
     print(record)
     userId = record["userId"]
     objectId = record["objectId"]
-    reactionId = record["reactionId"]
+    comment = record["comment"]
 
     # Create dictionary and ingest data into MongoDB
     try:
        reaction_rec = {
          'userId': userId,
          'objectId': objectId,
-         'reactionId': reactionId
+         'comment': comment
          }
          
-       print (reaction_rec)
-       reaction_id = db.peliculas_reactions.insert_one(reaction_rec)
-       print("Data inserted with record ids", reaction_id)
+       print (comment_rec)
+       comment_id = db.peliculas_comments.insert_one(comment_rec)
+       print("Data inserted with record ids", comment_id)
     except:
        print("Could not insert into MongoDB")
     try:
-       agg_result= db.peliculas_reactions.aggregate(
+       agg_result= db.peliculas_comments.aggregate(
        [{
          "$group" : 
          {  "_id" : {
                "objectId": "$objectId",
-               "reactionId": "$reactionId"
+               "comment": "$comment"
             }, 
             "n"    : {"$sum": 1}
          }}
        ])
-       db.peliculas_summary.delete_many({})
+       db.peliculas_summaryComments.delete_many({})
        for i in agg_result:
          print(i)
-         summary_id = db.peliculas_summaryreactions.insert_one(i)
-         print("Reaction inserted with record ids", summary_id)
+         summary_id = db.peliculas_summaryComments.insert_one(i)
+         print("Comment inserted with record ids", summaryComment_id)
 
     except Exception as e:
        print(f'group by caught {type(e)}: ')
