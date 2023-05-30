@@ -70,8 +70,8 @@ for msg in consumer:
        db.peliculas_summaryComments.delete_many({})
        for i in agg_result:
          print(i)
-         summary_id = db.peliculas_summaryComments.insert_one(i)
-         print("Comment inserted with record ids", summaryComment_id)
+         summaryComments_id = db.peliculas_summaryComments.insert_one(i)
+         print("Comment inserted with record ids", summaryComments_id)
 
     except Exception as e:
        print(f'group by caught {type(e)}: ')
